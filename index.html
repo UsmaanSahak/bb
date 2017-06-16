@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Borrelia Genome Database</title>
+    <script src="//code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="js-css/google.js" type="text/javascript"></script>
+
+    <script src="js-css/index.js" type="text/javascript"></script>
+    <link href="js-css/style.css" rel="stylesheet" type="text/css" />
+
+    <link rel="icon" type="image/png" href="js-css/logo.png" />
+    <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyARYldtBkXaB-Wlmeahqsl0lMuIYBIwglM"></script>
+
+</head>
+
+<body>
+
+<table>
+<tr height="42px">
+  <td background="js-css/banner.png" width="1042px">
+	<div id="help">
+        <a href="#" onclick='window.open("http://diverge.hunter.cuny.edu/labwiki/BorreliaBase_Help", "help", "width=1042, height=720, scrollbars=yes")'>Help</a>
+    </div>
+	</td>
+</tr>
+
+<tr><td style="position:relative">
+<!--begin of main tabs-->
+<div id="main_tabs">
+<ul>
+  <li><a href="#tabStrain">Strain</a></li>
+  <li><a href="#tabParalog">Gene Family</a></li>
+  <li><a href="#tabSynteny">Core Genome</a></li>
+  <li><a href="#tabPlasmid">Plasmids</a></li>
+  <li><a href="#tabTrans">Transcriptome</a></li>
+  <li><a href="#tabReplicon">Replicons</a></li>
+  <li><a href="#tabBlast">BLAST</a></li>
+</ul>
+
+<!--begin of tab1: Strain-->
+<div id="tabStrain">
+<table>
+<tr>
+    <td valign="top" id="ltree">
+        <div id="map"></div>
+    </td>
+    <td id="strain_tbl">
+        <div id="fasta" class="info hidden">
+            <span class="step">FASTA of <span id="geoName" class="act"></span>: &nbsp;</span>
+            <span id='close' class="btnClose">x</span><br>
+            &nbsp;&bull; &nbsp;<a>Genes</a><br>
+            &nbsp;&bull; &nbsp;<a>Proteins</a>
+        </div>
+        <div id="pub" class="info hidden"></div>
+    </td>
+</tr>
+</table>
+</div><!--end of tab1: Strain-->
+
+<!--begin of tab2: Gene Family-->
+<div id="tabParalog">
+<table width="100%">
+<tr height="33px" class="firstRow">
+    <td width="380px" style="padding-left:120px">
+        <span class="step">Search by locus name:</span>&nbsp;
+        <input type="text" id="searchLocus" placeholder="Ex: bb_A04, bb_0012">&nbsp;&nbsp;
+        <span class="zoom"><a href="#"><img src="js-css/zoom.png" onclick="getParalog()" title="view paralog" /></a></span>
+    </td>
+    <div id="newsPara" class="info hidden"></div>
+    <td style="padding-left:65px">
+        <span class="step">Search by gene symbol:</span>&nbsp;
+        <input type="text" id="searchSym" placeholder="Ex: ospA, osp">&nbsp;&nbsp;
+        <span class="zoom"><a href="#"><img src="js-css/zoom.png" onclick="getParalog(1)" title="view paralog" /></a></span>
+    </td>
+</tr>
+
+
+
+
+
+
+<div id="CompleteLocus" class=hidden style="position:absolute;left:265px;top:79px;background-color:DarkGray;border:solid black 1px;width:150px;">
+
+<p id="loSuggestions" style="margin:0px;padding:0px;"> test </p>
+
+</div>
+
+<div id="CompleteSym" style="position:absolute;left:720px;top:79px;background-color:DarkGray;border:solid black 1px;width:150px;" class=hidden>
+
+<p id="symSuggestions" style="margin:0px;padding:0px;"> sym test </p>
+
+</div>
+
+
+
+
+
+
+
+
+<tr><td colspan="2">
+    <table style="margin-top:3px">
+        <tr>
+            <td colspan="2" height="39px"><div id="dbl_click" class="hidden"><b>Double click</b> <span class="step">locus for synteny</span></div></td>
+        
+            <td id="paraInf" class="hidden" rowspan="2" valign="top">
+                <div id="sub_tabs">
+                    <ul>
+                        <li onclick="hideClone()"><a href="#annoP">Annotation</a></li>
+                        <li onClick="thumbnail()" id="sub2"><a href="#alignP">Alignments</a></li>
+                    </ul>
+                    
+                    <ul id="downPara" class="btn down">
+                        <li>
+                            <a href="#">Download</a>
+                            <ul>
+                                <li><a href=# onclick="downSeq(0)">DNA alignment</a></li>
+                                <li><a href=# onclick="downSeq(1)">protein alignment</a></li>
+                                <li><a href=# onclick="downSeq(2)">Newick Tree</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <div id="annoP">
+                        <table class="paraAnno" id="pfam">
+                            <tr><th><i>Borrelia</i> PFAM ID: &nbsp <span></span></th></tr>
+                        </table>
+                        <table class="paraAnno" id="tigr"><tr><th colspan="2">TIGR</th></tr></table>
+                        <table class="paraAnno" id="pubmed"><tr><th colspan="2">PubMed</th></tr></table>
+                    </div>
+                    
+                    <div id="alignP">
+                        <div id="thumbnail"></div>
+                        <div id="btnShowSeqP" class="btn btnShowSeq"><a href="#" onclick="drawAlign()">Show sequence</a></div>
+                        <div id="seqP" class="hidden">
+                            <div id="seqParea"></div>
+                            <div id="gdVp" class="guide guideV"></div>
+                            <div id="gdHp" class="guide guideH"></div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        
+        <tr valign="top">
+            <td id="treeP"></td>
+            <td id="nameP">
+                <table id="paraName"></table>
+                <div id="paraNameC"></div>
+                <div id="gdHp2" class="guide guideH"></div>
+            </td>
+        </tr>
+    </table>
+    </td></tr>
+</table>
+</div><!--end of tab2: Gene Family><-->
+
+<!--begin of tab3: Core Genome-->
+<div id="tabSynteny">
+<table width="100%" style="position:relative">
+    <tr height="45px" class="firstRow">
+        <td align="center" style="width:600px">
+            <span class="step">Select replicon:</span>&nbsp;&nbsp;&nbsp;
+            <span style="text-align:left"><select id="replicon"></select></span>
+        </td>
+        
+        <td id="legORF"></td>
+    </tr>
+
+    <tr>
+    <td colspan="2">
+        <table style="margin-top:4px">
+            <tr>
+                <td id="infoCtr">
+                    <div id="btnShowSeqO" class="btn btnShowSeq hidden"><a href="#" onclick="getAlign()">Show sequence</a></div>
+                    <ul id="downOrth" class="btn down hidden">
+                        <li>
+                            <a href="#">Download</a>
+                            <ul>
+                                <li><a href=# onclick="downSeq(0,1)">DNA alignment</a></li>
+                                <li><a href=# onclick="downSeq(1,1)">protein alignment</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </td>
+                
+                <td rowspan="2" valign="top">
+                    <div id="showSynteny">
+                        <div id="syn"></div>
+                        <div id="syntip" class="tip tooltip hidden"></div>
+                    </div>
+                </td>
+                
+                <td rowspan="2" valign="top"><div id="seqO">
+                        <div id="seqOrth"></div>
+                        <div id="gdV" class="guide guideV"></div>
+                        <div id="gMark" class="guideMark"></div>
+                        <div id="gdH" class="guide guideH"></div>
+                </div></td>
+            </tr>
+            
+            <tr>
+                <td valign="top" id="tree">
+                    <div id="trees"></div>
+                    <div id="treesC"></div>
+                    <div id="gdH2" class="guide guideH"></div>
+                </td>
+            </tr>
+        </table>
+    
+    </td>
+    </tr>
+</table>
+</div><!--end of tab3: Core Genome-->
+
+<!--begin of tab4: Plasmids-->
+<div id="tabPlasmid">
+<table>
+    <tr>
+        <td id="ptree"></td>
+        <td valign="top" style="padding-left:0; padding-bottom:0">
+            <div id="plasmidZone">
+                <div id="pls"></div>
+                <div id="plstip" class="tip tooltip hidden"></div>
+            </div>
+        </td>
+    </tr>
+</table>
+</div><!--end of tab4: Plasmids><-->
+
+<!--begin of tab5: Transcriptome-->
+<div id="tabTrans">
+<table width="100%" style="position:relative">
+    <tr height="45px" class="firstRow">
+        <td align="center" style="width:395px">
+            <span class="step">Select B31 replicon:</span>&nbsp;
+            <span style="text-align:left"><select id="repliconMenu"></select></span>
+        </td>
+        
+        <td align="center"><b>Double click</b> <span class="step">locus name for annotation</span></td>
+        <td width="310px" id="legSig"></td>
+    </tr>
+
+    <tr>
+    <td colspan="3">
+        <table id="svgTrans">
+            <tr id='transTitle0'>
+                <td rowspan="2"><b>Fold change</b></td>
+            </tr>
+            <tr align="center">
+                <td>mutation-wt</td>
+                <td></td>
+                <td>early-mid</td>
+                <td>early-late</td>
+                <td>mid-late</td>
+                <td></td>
+                <td>glucosamine</td>
+                <td>maltose</td>
+                <td>mannose</td>
+                <td>trehalose</td>
+                <td></td>
+                <td>nymph-larvae</td>
+                <td>DMC-nymph</td>
+                <td>DMC-larvae</td>
+            </tr>
+            
+        </table>
+    </td>
+    </tr>
+</table>
+</div><!--end of tab5: Transcriptome-->
+
+<!--begin of tab6: Replicons-->
+<div id="tabReplicon">
+<table>
+    <tr>
+        <td align="center">
+            <p><b>Click</b> <span class="step">dot to access GenBank pages:</span></p>
+            (<b style="font-size:26px; vertical-align:middle">&#9643;</b> &nbsp;Fused plasmid)
+        </td>
+        <td id="conTitle"></td>
+    </tr>
+    <tr>
+        <td id="gtree" valign="top"></td>
+        <td valign="top" style="padding-left:0"><table id="genome_tbl"></table></td>
+    </tr>
+</table>
+</div>
+<!--end of tab6: Replicons-->
+
+<!--begin of tab7: Blast-->
+<div id="tabBlast">
+<table width="100%" style="position:relative">
+<tr class="step" height="22px">
+    <td>Enter a protein or DNA sequence:</td>
+    <td></td>
+</tr>
+
+<tr>
+    <td rowspan="3" class="firstRow" width="690px"><textarea name="sequence" id="sequence"></textarea></td>
+    <div id="newsBlast" class="info hidden"></div>
+
+    <td class="step secondCol">
+        <span>Select database</span>&nbsp;&nbsp;
+        <span style="text-align:left">
+            <select id="strainBlast">
+                <option value=100 selected="selected">B31</option>
+                <option value='all'>All Borrelia (CDS only)</option>
+            </select>
+        </span>
+    </td>
+</tr>
+
+<tr>
+    <td class="step secondCol">
+        <span>Select E-value &nbsp; &nbsp;</span>&nbsp;&nbsp;
+        <span style="text-align:left">
+            <select id="eValue">
+                <option value=0.01>1e-2</option>
+                <option value=0.00001 selected="selected">1e-5</option>
+                <option value=0.0000000001>1e-10</option>
+            </select>
+        </span>
+    </td>
+</tr>
+
+<tr><td><button id="submit" onclick="blast()">submit</button></td></tr>
+
+<tr><td colspan="2" id="blastRes"></td></tr>
+
+<div id="infoBlast" class="info hidden">Double click for tree & annotation</div>
+<div id="ack">Based on NCBI-BLAST 2.2.26+ (<a href="http://www.ncbi.nlm.nih.gov/pubmed/9254694" target="_blank">Altschul et al 1997</a>; <a href="http://www.ncbi.nlm.nih.gov/pubmed/11452024" target="_blank">Schaffer et al 2001</a>)</div>
+</table>
+</div><!--end of tab7: Blast><-->
+
+</div> <!--end of main tabs-->
+
+<div id="legClick" class="hidden"><b>Click</b> solid ORF for ortholog; <b>Double click</b> ORF for annotation</div>
+
+</td></tr>
+
+
+<tr>
+    <td id="contactus" height="22px" valign="top">This website is maintained by <a href="http://diverge.hunter.cuny.edu/labwiki" target="_new">Dr. Qiu's group</a> with <a href="#" onMouseOver="$('#info1').show()" onMouseOut="$('#info1').hide()">Borrelia Genome Sequencing Corsortium</a> &nbsp;&nbsp;&nbsp;&nbsp;(Release 2.50)
+        
+        <div id="hint" onMouseOver="$('#info0').show()" onMouseOut="$('#info0').hide()">i</div>
+        <div id="info0" class="info hidden">This version includes annotated <i>Borrelia</i> genomes deposited to GenBank by December 31, 2016</div>
+        <div id="info1" class="info hidden">
+            <ul>
+            <li><em>Emmanuel Mongodin & Claire Fraser</em>, Institute for Genome Sciences, University of Maryland</li>
+            <li><em>Sherwood Casjens</em>, University of Utah Medical School</li>
+            <li><em>Steven Schutzer</em>, New Jersey Medical School</li>
+            <li><em>Weigang Qiu</em>, Hunter College of City University of New York</li> 
+            <li><em>Benjamin Luft</em>, Stony Brook University Health Science Center</li>
+            </ul>
+            </div>
+        </div>
+    </td>
+</tr>
+    
+<div id="seqWin">
+    <span class="btnClose">x</span><br>
+    <div id="seqDown"></div>
+</div>
+</table>
+
+</body>
+</html>
