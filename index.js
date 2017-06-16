@@ -1,24 +1,43 @@
 $(document).keyup(function() {
  if (document.activeElement.id == "searchLocus") {
-  $("#autoComplete").show();
+  $("#CompleteSym").hide();
+  $("#CompleteLocus").show();
   var query = document.getElementById("searchLocus").value;
-  getSuggestions(query);
-  /*document.getElementById("sample").innerHTML = query;*/
+  getSuggestions(query,"loSuggestions");
+ } else if (document.activeElement.id == "searchSym") {
+  var query = document.getElementById("searchSym").value;
+  getSuggestions(query,"symSuggestions");
+  $("#CompleteLocus").hide();
+  $("#CompleteSym").show();
  } else {
-  $("#autoComplete").hide();
+  $("#CompleteLocus").hide();
+  $("#CompleteSym").hide();
  } 
 });
 
 
+/*Make a jquery function on clicking a table entry (name it a class), in which it passes function
+the value of the element that was clicked, and the function is what ends up calling getparalog().*/
 
-function getSuggestions(e) {
+
+$(document).click(function() {
+ if (document.activeElement.id != "searchLocus" && document.activeElement.id != "searchSym") {
+  $("#CompleteLocus").hide();
+  $("#CompleteSym").hide();
+ }
+});
+
+
+function getSuggestions(e,name) {
  var xhttp = new XMLHttpRequest();
  xhttp.onreadystatechange = function() {
   if (this.readyState == 4 && this.status == 200) {
-   document.getElementById("sample").innerHTML = this.responseText;
+   /*document.getElementById("loSuggestions").innerHTML = name;*/
+   document.getElementById(name).innerHTML = this.responseText;
   }
  };
- xhttp.open("GET","../cgi-bin/a.pl?entry=" + e,true);
+ var Url = "../cgi-bin/a.pl?entry=" + e + "&suggType=" + name;
+ xhttp.open("GET",Url,true);
  xhttp.send();
 }
 
