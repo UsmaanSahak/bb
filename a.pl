@@ -36,6 +36,7 @@ if ($s eq "symSuggestions") {
 
 print "<table position:relative>";
 print "<tr><th> $s is suggTypes </th></tr>";
+
 for (my $i = 1; $i < $numDocs; $i++) {
   print "<tr><th>$documents->[$i]->{term}</th></tr>";
 }
