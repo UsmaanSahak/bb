@@ -67,14 +67,13 @@
 
 <!--begin of tab2: Gene Family-->
 <div id="tabParalog">
-<table width="100%">
+<table style="width:100%;z-index:1;">
 <tr height="33px" class="firstRow">
     <td width="380px" style="padding-left:120px">
         <span class="step">Search by locus name:</span>&nbsp;
         <input type="text" id="searchLocus" placeholder="Ex: bb_A04, bb_0012">&nbsp;&nbsp;
         <span class="zoom"><a href="#"><img src="js-css/zoom.png" onclick="getParalog()" title="view paralog" /></a></span>
     </td>
-
     <div id="newsPara" class="info hidden"></div>
     <td style="padding-left:65px">
         <span class="step">Search by gene symbol:</span>&nbsp;
@@ -87,21 +86,16 @@
 
 
 
-<div id="CompleteLocus" class=hidden style="position:absolute;left:265px;top:79px;background-color:DarkGray;border:solid black 1px;width:150px;">
+
+<div id="CompleteLocus" class=hidden style="position:absolute;left:265px;top:79px;background-color:DarkGray;border:solid black 1px;width:150px;z-index: 2;">
 
 <p id="loSuggestions" style="margin:0px;padding:0px;"> test </p>
 
 </div>
 
-<div id="CompleteSym" style="position:absolute;left:720px;top:79px;background-color:DarkGray;border:solid black 1px;width:150px;" class=hidden>
+<div id="CompleteSym" style="position:absolute;left:720px;top:79px;background-color:DarkGray;border:solid black 1px;width:150px;z-index:2;" class=hidden>
 
 <p id="symSuggestions" style="margin:0px;padding:0px;"> sym test </p>
-
-
-
-
-
-
 
 </div>
 
@@ -111,40 +105,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div id="newsPara" class="info hidden"></div>
-
-    <td style="padding-left:65px">
-        <span class="step">Search by gene symbol:</span>&nbsp;
-        <input type="text" id="searchSym" placeholder="Ex: ospA, osp">&nbsp;&nbsp;
-        <span class="zoom"><a href="#"><img src="js-css/zoom.png" onclick="getParalog(1)" title="view paralog" /></a></span>
-    </td>
-</tr>
 
 <tr><td colspan="2">
     <table style="margin-top:3px">

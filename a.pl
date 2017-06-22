@@ -23,6 +23,7 @@ if ($s eq "loSuggestions") {
  $result = decode_json($content);
  $documents = $result->{suggest}->{suggLo}->{$e}->{suggestions};
  $numDocs = @$documents;
+ $s = 1;
 } 
 if ($s eq "symSuggestions") {
  $url = 'http://test.borreliabase.org:8983/solr/testcore/suggest?suggest.q='.$e.'&wt=json&suggest=true&suggest.dictionary=suggSym';
@@ -31,13 +32,17 @@ if ($s eq "symSuggestions") {
  $result = decode_json($content);
  $documents = $result->{suggest}->{suggSym}->{$e}->{suggestions};
  $numDocs = @$documents;
+ $s = 0;
 }
 
-
-print "<table position:relative>";
+print "<table>";
 print "<tr><th> $s is suggTypes </th></tr>";
-
+my $oEntry;
 for (my $i = 1; $i < $numDocs; $i++) {
-  print "<tr><th>$documents->[$i]->{term}</th></tr>";
+ $oEntry = $documents->[$i]->{term};
+ print "<tr><th onclick=\"teeee(this,$s)\">$oEntry</th></tr>";
 }
 print "</table>";
+
+#make class
+#make it so the clicked element of that class runs getparalog() with the value of that element.
