@@ -2,12 +2,6 @@
 <!-- Solr managed schema - automatically generated - DO NOT EDIT -->
 <schema name="example-data-driven-schema" version="1.6">
   <uniqueKey>id</uniqueKey>
-  <fieldType name="PerCharacter" class="solr.TextField">
-    <analyzer>
-      <tokenizer class="solr.PatternTokenizerFactory" pattern="."/>
-      <filter class="solr.LowerCaseFilterFactory"/>
-    </analyzer>
-  </fieldType>
   <fieldType name="ancestor_path" class="solr.TextField">
     <analyzer type="index">
       <tokenizer class="solr.KeywordTokenizerFactory"/>
@@ -431,7 +425,7 @@
   <field name="locus" type="perChar" stored="true"/>
   <field name="orth" type="tlongs"/>
   <field name="rna" type="tlongs"/>
-  <field name="sym" type="PerCharacter" stored="true"/>
+  <field name="sym" type="perChar" stored="true"/>
   <dynamicField name="*_txt_en_split_tight" type="text_en_splitting_tight" indexed="true" stored="true"/>
   <dynamicField name="*_descendent_path" type="descendent_path" indexed="true" stored="true"/>
   <dynamicField name="*_ancestor_path" type="ancestor_path" indexed="true" stored="true"/>

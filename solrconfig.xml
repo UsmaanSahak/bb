@@ -1013,7 +1013,7 @@
     <str name="lookupImpl">FuzzyLookupFactory</str>
     <str name="dictionaryImpl">DocumentDictionaryFactory</str>
     <str name="field">sym</str>
-    <str name="suggestAnalyzerFieldType">PerCharacter</str>
+    <str name="suggestAnalyzerFieldType">perChar</str>
    </lst>
   </searchComponent>
 
