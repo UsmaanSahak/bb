@@ -19,6 +19,18 @@ $(document).keyup(function() {
 /*Make a jquery function on clicking a table entry (name it a class), in which it passes function
 the value of the element that was clicked, and the function is what ends up calling getparalog().*/
 
+function teeee(entry,type) {
+ //document.getElementById("CompleteSym").innerHTML = entry.innerText;
+ if (type > 0) {
+  searchLocus.value = entry.innerText;
+  getParalog();
+ } else if (type == 0) {
+  searchSym.value = entry.innerText;
+  getParalog(1);
+ }
+}
+
+
 
 $(document).click(function() {
  if (document.activeElement.id != "searchLocus" && document.activeElement.id != "searchSym") {
